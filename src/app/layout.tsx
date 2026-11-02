@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OmniPost AI - Multi-Client Social Media Automation",
-  description: "Automate and schedule social media updates across Facebook, Instagram, YouTube, Pinterest, LinkedIn, and Google Business Profile with AI captions and creatives.",
+  title: "Gaurav IIFD - Social Media Automation & AI Creative Suite",
+  description: "Automate and schedule social media updates across Facebook, Instagram, YouTube, Pinterest, LinkedIn, and Google Business Profile with AI generative creatives, images, and videos.",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white">
+      <body className="min-h-full flex flex-col font-sans transition-colors duration-200">
         {children}
       </body>
     </html>

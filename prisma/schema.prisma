@@ -79,3 +79,21 @@ model ScheduleSetting {
   isEnabled Boolean  @default(true)
   createdAt DateTime @default(now())
 }
+
+model UserSetting {
+  id              String   @id @default("default_user")
+  name            String   @default("Gaurav Sharma")
+  email           String   @default("gaurav@iifd.edu")
+  organization    String   @default("Gaurav IIFD Studio")
+  avatarUrl       String?  @default("https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80")
+  theme           String   @default("dark") // "dark" | "light"
+  planName        String   @default("Agency Enterprise")
+  planStatus      String   @default("ACTIVE")
+  postsUsed       Int      @default(48)
+  postsLimit      Int      @default(1000)
+  creditsUsed     Int      @default(25)
+  creditsLimit    Int      @default(500)
+  apiKeys         String   @default("{}") // JSON map: { geminiKey, openAiKey, metaToken, linkedInToken, pinterestToken, youtubeKey }
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+}
