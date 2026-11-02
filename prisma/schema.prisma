@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Client {
+  id          String           @id @default(cuid())
+  name        String
+  slug        String           @unique
+  avatarUrl   String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  accounts    SocialAccount[]
+  posts       Post[]
+  schedules   ScheduleSetting[]
+}
+
+model SocialAccount {
+  id             String       @id @default(cuid())
+  clientId       String
+  client         Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  platform       String       // FACEBOOK, INSTAGRAM, LINKEDIN, YOUTUBE, PINTEREST, GOOGLE_BUSINESS
+  accountName    String
+  accountId      String       // Page ID / Channel ID / Profile ID
+  username       String?
+  profilePic     String?
+  accessToken    String?
+  refreshToken   String?
+  tokenExpiresAt DateTime?
+  status         String       @default("CONNECTED") // CONNECTED, EXPIRED, ERROR
+  metadata       String?      // JSON for extra configs (e.g. default board, location ID)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  targets        PostTarget[]
+
+  @@unique([clientId, platform, accountId])
+}
+
+model Post {
+  id           String       @id @default(cuid())
+  clientId     String
+  client       Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  content      String       // The post text / caption / hashtags
+  mediaUrls    String       @default("[]") // JSON string array of URLs
+  mediaType    String       @default("TEXT_ONLY") // TEXT_ONLY, IMAGE, VIDEO
+  status       String       @default("DRAFT") // DRAFT, SCHEDULED, PUBLISHED, FAILED
+  scheduledAt  DateTime?
+  publishedAt  DateTime?
+  errorMessage String?
+  aiPrompt     String?      // If generated via Gemini/OpenAI
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  targets      PostTarget[]
+}
+
+model PostTarget {
+  id             String        @id @default(cuid())
+  postId         String
+  post           Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  accountId      String
+  account        SocialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  platform       String
+  status         String        @default("PENDING") // PENDING, PUBLISHED, FAILED
+  platformPostId String?
+  errorMessage   String?
+  publishedAt    DateTime?
+}
+
+model ScheduleSetting {
+  id        String   @id @default(cuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  dayOfWeek Int      // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  timeSlot  String   // "09:00", "14:00", "19:00"
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+}

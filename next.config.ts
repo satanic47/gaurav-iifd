@@ -1,17 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
+  output: process.env.BUILD_STANDALONE ? "standalone" : undefined,
 };
 
 export default nextConfig;
